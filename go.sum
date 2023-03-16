@@ -1,7 +1,3 @@
-github.com/12end/fasthttp v0.0.0-20230314073235-31a4cecd6f9f h1:6rS4Z5MyGIBBDmoWvHXxTeP7oHnuPDxSkoG1FLXqaM8=
-github.com/12end/fasthttp v0.0.0-20230314073235-31a4cecd6f9f/go.mod h1:YeVEtjvek9jgb+L/FXM8tyQfR4phXh19r8EvCpOx7GY=
-github.com/12end/fasthttp v0.0.0-20230314151154-be3b33a53867 h1:yFLWy/67srVkAOQBXTiadVzWDoAiB80rKkCwUXsdWRE=
-github.com/12end/fasthttp v0.0.0-20230314151154-be3b33a53867/go.mod h1:TbZ2DLA/bmqoO5jrx6ihcOfb0fnrkCLFUrDbRW7f6no=
 github.com/12end/fasthttp v0.0.0-20230315101415-b32c0cdad66f h1:6JtxT0LXKsg+3vt3r4Us+xdExQxTvgqCggoRzarww+8=
 github.com/12end/fasthttp v0.0.0-20230315101415-b32c0cdad66f/go.mod h1:TbZ2DLA/bmqoO5jrx6ihcOfb0fnrkCLFUrDbRW7f6no=
 github.com/12end/tls v0.0.0-20230314100004-19093264102c h1:QskIxUy12/9FLCBmdTQKTawDAKTFFSvq+GICUZOG7NI=
