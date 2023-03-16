@@ -1,4 +1,4 @@
-module request
+module github.com/12end/request
 
 go 1.20
 
