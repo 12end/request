@@ -2,7 +2,7 @@ package request
 
 import (
 	"bytes"
-	"github.com/12end/fasthttp"
+	"github.com/valyala/fasthttp"
 	"html"
 	"regexp"
 	"strings"
@@ -29,17 +29,15 @@ func ReleaseResponse(resp *Response) {
 }
 
 type Response struct {
-	Resp   *fasthttp.Response
-	body   string
-	title  string
-	header string
+	Resp  *fasthttp.Response
+	body  string
+	title string
 }
 
 func (r *Response) Reset() {
 	fasthttp.ReleaseResponse(r.Resp)
 	r.title = ""
 	r.body = ""
-	r.header = ""
 }
 
 func (r *Response) GetHeader(k string) (string, bool) {

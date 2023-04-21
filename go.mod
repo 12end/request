@@ -3,8 +3,8 @@ module github.com/12end/request
 go 1.20
 
 require (
-	github.com/12end/fasthttp v0.0.0-20230315101415-b32c0cdad66f
-	github.com/12end/tls v0.0.0-20230314100004-19093264102c
+	github.com/12end/tls v0.0.0-20230329031950-bbfc948c6240
+	github.com/valyala/fasthttp v1.46.0
 )
 
 require (
@@ -14,3 +14,5 @@ require (
 	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 )
+
+replace github.com/valyala/fasthttp v1.46.0 => github.com/12end/fasthttp v0.0.0-20230421024451-368a43fe923e

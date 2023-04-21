@@ -1,7 +1,7 @@
-github.com/12end/fasthttp v0.0.0-20230315101415-b32c0cdad66f h1:6JtxT0LXKsg+3vt3r4Us+xdExQxTvgqCggoRzarww+8=
-github.com/12end/fasthttp v0.0.0-20230315101415-b32c0cdad66f/go.mod h1:TbZ2DLA/bmqoO5jrx6ihcOfb0fnrkCLFUrDbRW7f6no=
-github.com/12end/tls v0.0.0-20230314100004-19093264102c h1:QskIxUy12/9FLCBmdTQKTawDAKTFFSvq+GICUZOG7NI=
-github.com/12end/tls v0.0.0-20230314100004-19093264102c/go.mod h1:Atb/DLHlYWKw3JSQUNiXSAHlQbqPt/gtSrav/49Rwug=
+github.com/12end/fasthttp v0.0.0-20230421024451-368a43fe923e h1:VF4Q42D5v6biwECaeq0q7rhodPs/tWxJqq+zN6R82A8=
+github.com/12end/fasthttp v0.0.0-20230421024451-368a43fe923e/go.mod h1:Yrcvin5qM7dee6ewwGj7TbUMJu3KlQ8HPkZ3JY9ETNs=
+github.com/12end/tls v0.0.0-20230329031950-bbfc948c6240 h1:mivquZGj6e4m3ZQjYEnp16Hs+O+fC9F1uAyl2IQw+zI=
+github.com/12end/tls v0.0.0-20230329031950-bbfc948c6240/go.mod h1:Atb/DLHlYWKw3JSQUNiXSAHlQbqPt/gtSrav/49Rwug=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
 github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/klauspost/compress v1.16.3 h1:XuJt9zzcnaz6a16/OU53ZjWp/v7/42WcR5t2a0PcNQY=
