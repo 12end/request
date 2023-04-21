@@ -49,37 +49,33 @@ func (r *Response) GetHeader(k string) (string, bool) {
 	}
 }
 
-func (r *Response) GetBody() (string, error) {
+func (r *Response) Body() string {
 	if r.body != "" {
-		return r.body, nil
+		return r.body
 	}
 	body, err := r.Resp.BodyUncompressed()
-	return b2s(body), err
+	if err != nil {
+		body = r.Resp.Body()
+	}
+	r.body = b2s(body)
+	return r.body
 }
 
-func (r *Response) GetTitle() (string, error) {
+func (r *Response) Title() string {
 	if r.title != "" {
-		return r.title, nil
+		return r.title
 	}
-	body, err := r.GetBody()
-	if err != nil {
-		return r.title, err
-	}
-	find := titleReg.FindStringSubmatch(body)
+	find := titleReg.FindStringSubmatch(r.Body())
 	if len(find) > 1 {
 		r.title = find[1]
 		r.title = emptyReg.ReplaceAllString(html.UnescapeString(r.title), "")
 		r.title = strings.TrimSpace(r.title)
 	}
-	return r.title, err
+	return r.title
 }
 
 func (r *Response) BodyContains(s string) bool {
-	b, err := r.GetBody()
-	if err != nil {
-		return false
-	}
-	return strings.Contains(b, s)
+	return strings.Contains(r.Body(), s)
 }
 
 func (r *Response) HeaderContains(s string) bool {
@@ -100,11 +96,7 @@ func (r *Response) String() string {
 
 func (r *Response) Search(reg *regexp.Regexp) map[string]string {
 	result := make(map[string]string)
-	body, err := r.GetBody()
-	if err != nil {
-		return result
-	}
-	match := reg.FindStringSubmatch(body)
+	match := reg.FindStringSubmatch(r.Body())
 	for i, name := range reg.SubexpNames() {
 		if i != 0 && name != "" {
 			result[name] = match[i]
