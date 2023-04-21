@@ -8,7 +8,10 @@ import (
 	"github.com/valyala/fasthttp"
 	"io"
 	"mime/multipart"
+	"net/http"
+	"net/http/cookiejar"
 	"net/textproto"
+	"net/url"
 	"strings"
 	"sync"
 	"time"
@@ -64,11 +67,13 @@ type Request struct {
 	*fasthttp.Request
 	Trace        *[]TraceInfo
 	maxRedirects int
+	jar          cookiejar.Jar
 }
 
 func (r *Request) Reset() {
 	r.Trace = nil
 	r.maxRedirects = 0
+	r.jar = cookiejar.Jar{}
 	fasthttp.ReleaseRequest(r.Request)
 }
 
@@ -175,28 +180,36 @@ func escapeQuotes(s string) string {
 func (r *Request) Do(resp *Response) error {
 	resp.body = ""
 	resp.title = ""
+	u, err := url.Parse(r.Request.URI().String())
+	if err != nil {
+		return err
+	}
+	if r.jar.Cookies(u) != nil {
+		r.Header.DelAllCookies()
+		cookies := r.jar.Cookies(u)
+		for _, c := range cookies {
+			r.Header.SetCookie(c.Name, c.Value)
+		}
+	}
+	start := time.Now()
+	defer func() {
+		if r.Trace != nil {
+			*r.Trace = append(*r.Trace, TraceInfo{
+				Request:  r.String(),
+				Response: resp.String(),
+				Duration: time.Since(start),
+			})
+		}
+		resp.Header.VisitAllCookie(func(key, value []byte) {
+			r.jar.SetCookies(u, append(r.jar.Cookies(u), &http.Cookie{
+				Name:  string(key),
+				Value: string(value),
+			}))
+		})
+	}()
 	if r.maxRedirects > 1 {
 		return defaultClient.DoRedirects(r.Request, resp.Response, r.maxRedirects)
 	} else {
 		return defaultClient.Do(r.Request, resp.Response)
 	}
-}
-
-func (r *Request) DoWithTrace(resp *Response) error {
-	if r.Trace == nil {
-		return r.Do(resp)
-	}
-	resp.body = ""
-	resp.title = ""
-	start := time.Now()
-	err := defaultClient.Do(r.Request, resp.Response)
-	if err != nil {
-		return err
-	}
-	*r.Trace = append(*r.Trace, TraceInfo{
-		Request:  r.String(),
-		Response: resp.String(),
-		Duration: time.Since(start),
-	})
-	return nil
 }
