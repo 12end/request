@@ -87,7 +87,7 @@ func (r *Request) Method(method string) *Request {
 }
 
 func (r *Request) URL(url string) *Request {
-	r.Request.SetRequestURIBytes(s2b(url))
+	r.Request.SetRequestURIBytes([]byte(url))
 	return r
 }
 
@@ -122,7 +122,7 @@ func (r *Request) DisableNormalizing() *Request {
 }
 
 func (r *Request) BodyRaw(s string) *Request {
-	r.Request.SetBodyRaw(s2b(s))
+	r.Request.SetBodyRaw([]byte(s))
 	return r
 }
 
@@ -132,7 +132,7 @@ func (r *Request) FromRaw(s string) error {
 
 func (r *Request) Host(host string) *Request {
 	r.Request.UseHostHeader = true
-	r.Request.Header.SetHostBytes(s2b(host))
+	r.Request.Header.SetHostBytes([]byte(host))
 	return r
 }
 

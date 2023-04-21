@@ -45,7 +45,7 @@ func (r *Response) GetHeader(k string) (string, bool) {
 	if vb == nil {
 		return "", false
 	} else {
-		return b2s(vb), true
+		return string(vb), true
 	}
 }
 
@@ -57,7 +57,7 @@ func (r *Response) Text() string {
 	if err != nil {
 		body = r.Response.Body()
 	}
-	r.body = b2s(body)
+	r.body = string(body)
 	return r.body
 }
 
@@ -79,7 +79,7 @@ func (r *Response) BodyContains(s string) bool {
 }
 
 func (r *Response) HeaderContains(s string) bool {
-	return bytes.Contains(r.Response.Header.Header(), s2b(s))
+	return bytes.Contains(r.Response.Header.Header(), []byte(s))
 }
 
 func (r *Response) Cookie(k string) (string, bool) {
@@ -87,7 +87,7 @@ func (r *Response) Cookie(k string) (string, bool) {
 	if v == nil {
 		return "", false
 	}
-	return b2s(v), true
+	return string(v), true
 }
 
 func (r *Response) String() string {
