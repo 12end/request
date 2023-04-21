@@ -173,6 +173,8 @@ func escapeQuotes(s string) string {
 }
 
 func (r *Request) Do(resp *Response) error {
+	resp.body = ""
+	resp.title = ""
 	if r.maxRedirects > 1 {
 		return defaultClient.DoRedirects(r.Request, resp.Response, r.maxRedirects)
 	} else {
@@ -184,6 +186,8 @@ func (r *Request) DoWithTrace(resp *Response) error {
 	if r.Trace == nil {
 		return r.Do(resp)
 	}
+	resp.body = ""
+	resp.title = ""
 	start := time.Now()
 	err := defaultClient.Do(r.Request, resp.Response)
 	if err != nil {
