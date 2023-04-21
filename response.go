@@ -49,7 +49,7 @@ func (r *Response) GetHeader(k string) (string, bool) {
 	}
 }
 
-func (r *Response) Body() string {
+func (r *Response) Text() string {
 	if r.body != "" {
 		return r.body
 	}
@@ -65,7 +65,7 @@ func (r *Response) Title() string {
 	if r.title != "" {
 		return r.title
 	}
-	find := titleReg.FindStringSubmatch(r.Body())
+	find := titleReg.FindStringSubmatch(r.Text())
 	if len(find) > 1 {
 		r.title = find[1]
 		r.title = emptyReg.ReplaceAllString(html.UnescapeString(r.title), "")
@@ -75,7 +75,7 @@ func (r *Response) Title() string {
 }
 
 func (r *Response) BodyContains(s string) bool {
-	return strings.Contains(r.Body(), s)
+	return strings.Contains(r.Text(), s)
 }
 
 func (r *Response) HeaderContains(s string) bool {
@@ -96,7 +96,7 @@ func (r *Response) String() string {
 
 func (r *Response) Search(reg *regexp.Regexp) map[string]string {
 	result := make(map[string]string)
-	match := reg.FindStringSubmatch(r.Body())
+	match := reg.FindStringSubmatch(r.Text())
 	for i, name := range reg.SubexpNames() {
 		if i != 0 && name != "" {
 			result[name] = match[i]
