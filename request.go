@@ -201,11 +201,11 @@ func (r *Request) Do(resp *Response) error {
 			})
 		}
 		if resp.Header.Peek("Set-Cookie") != nil {
-			req := http.Request{Header: map[string][]string{}}
+			httpResp := http.Response{Header: map[string][]string{}}
 			resp.Header.VisitAllCookie(func(key, value []byte) {
-				req.Header.Add("Set-Cookie", string(value))
+				httpResp.Header.Add("Set-Cookie", string(value))
 			})
-			r.jar.SetCookies(u, req.Cookies())
+			r.jar.SetCookies(u, httpResp.Cookies())
 		}
 	}()
 	if r.maxRedirects > 1 {
