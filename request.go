@@ -38,7 +38,7 @@ func AcquireRequest() *Request {
 	v := requestPool.Get()
 	if v == nil {
 		return &Request{
-			Req: fasthttp.AcquireRequest(),
+			Request: fasthttp.AcquireRequest(),
 		}
 	}
 	return v.(*Request)
@@ -61,7 +61,7 @@ type TraceInfo struct {
 }
 
 type Request struct {
-	Req          *fasthttp.Request
+	*fasthttp.Request
 	Trace        *[]TraceInfo
 	maxRedirects int
 }
@@ -69,7 +69,7 @@ type Request struct {
 func (r *Request) Reset() {
 	r.Trace = nil
 	r.maxRedirects = 0
-	fasthttp.ReleaseRequest(r.Req)
+	fasthttp.ReleaseRequest(r.Request)
 }
 
 func (r *Request) SetMaxRedirects(t int) *Request {
@@ -78,16 +78,16 @@ func (r *Request) SetMaxRedirects(t int) *Request {
 }
 
 func (r *Request) String() string {
-	return r.Req.String()
+	return r.Request.String()
 }
 
 func (r *Request) Method(method string) *Request {
-	r.Req.Header.SetMethod(method)
+	r.Request.Header.SetMethod(method)
 	return r
 }
 
 func (r *Request) URL(url string) *Request {
-	r.Req.SetRequestURIBytes(s2b(url))
+	r.Request.SetRequestURIBytes(s2b(url))
 	return r
 }
 
@@ -98,41 +98,41 @@ func (r *Request) WithTrace(t *[]TraceInfo) *Request {
 
 func (r *Request) SetParams(p Params) *Request {
 	for k, v := range p {
-		r.Req.URI().QueryArgs().Set(k, v)
+		r.Request.URI().QueryArgs().Set(k, v)
 	}
 	return r
 }
 
 func (r *Request) SetTimeout(t time.Duration) *Request {
-	r.Req.SetTimeout(t)
+	r.Request.SetTimeout(t)
 	return r
 }
 
 func (r *Request) SetData(p Data) *Request {
 	for k, v := range p {
-		r.Req.PostArgs().Set(k, v)
+		r.Request.PostArgs().Set(k, v)
 	}
 	return r
 }
 
 func (r *Request) DisableNormalizing() *Request {
-	r.Req.Header.DisableNormalizing()
-	r.Req.URI().DisablePathNormalizing = true
+	r.Request.Header.DisableNormalizing()
+	r.Request.URI().DisablePathNormalizing = true
 	return r
 }
 
 func (r *Request) BodyRaw(s string) *Request {
-	r.Req.SetBodyRaw(s2b(s))
+	r.Request.SetBodyRaw(s2b(s))
 	return r
 }
 
 func (r *Request) FromRaw(s string) error {
-	return r.Req.Read(bufio.NewReader(strings.NewReader(s)))
+	return r.Request.Read(bufio.NewReader(strings.NewReader(s)))
 }
 
 func (r *Request) Host(host string) *Request {
-	r.Req.UseHostHeader = true
-	r.Req.Header.SetHostBytes(s2b(host))
+	r.Request.UseHostHeader = true
+	r.Request.Header.SetHostBytes(s2b(host))
 	return r
 }
 
@@ -161,8 +161,8 @@ func (r *Request) MultipartFiles(fs Files) *Request {
 		}
 	}
 
-	r.Req.Header.SetMultipartFormBoundary(w.Boundary())
-	r.Req.SetBodyRaw(b.Bytes())
+	r.Request.Header.SetMultipartFormBoundary(w.Boundary())
+	r.Request.SetBodyRaw(b.Bytes())
 	return r
 }
 
@@ -174,9 +174,9 @@ func escapeQuotes(s string) string {
 
 func (r *Request) Do(resp *Response) error {
 	if r.maxRedirects > 1 {
-		return defaultClient.DoRedirects(r.Req, resp.Resp, r.maxRedirects)
+		return defaultClient.DoRedirects(r.Request, resp.Response, r.maxRedirects)
 	} else {
-		return defaultClient.Do(r.Req, resp.Resp)
+		return defaultClient.Do(r.Request, resp.Response)
 	}
 }
 
@@ -185,7 +185,7 @@ func (r *Request) DoWithTrace(resp *Response) error {
 		return r.Do(resp)
 	}
 	start := time.Now()
-	err := defaultClient.Do(r.Req, resp.Resp)
+	err := defaultClient.Do(r.Request, resp.Response)
 	if err != nil {
 		return err
 	}

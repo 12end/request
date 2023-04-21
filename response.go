@@ -17,7 +17,7 @@ func AcquireResponse() *Response {
 	v := responsePool.Get()
 	if v == nil {
 		return &Response{
-			Resp: fasthttp.AcquireResponse(),
+			Response: fasthttp.AcquireResponse(),
 		}
 	}
 	return v.(*Response)
@@ -29,19 +29,19 @@ func ReleaseResponse(resp *Response) {
 }
 
 type Response struct {
-	Resp  *fasthttp.Response
+	*fasthttp.Response
 	body  string
 	title string
 }
 
 func (r *Response) Reset() {
-	fasthttp.ReleaseResponse(r.Resp)
+	fasthttp.ReleaseResponse(r.Response)
 	r.title = ""
 	r.body = ""
 }
 
 func (r *Response) GetHeader(k string) (string, bool) {
-	vb := r.Resp.Header.Peek(k)
+	vb := r.Response.Header.Peek(k)
 	if vb == nil {
 		return "", false
 	} else {
@@ -53,9 +53,9 @@ func (r *Response) Body() string {
 	if r.body != "" {
 		return r.body
 	}
-	body, err := r.Resp.BodyUncompressed()
+	body, err := r.Response.BodyUncompressed()
 	if err != nil {
-		body = r.Resp.Body()
+		body = r.Response.Body()
 	}
 	r.body = b2s(body)
 	return r.body
@@ -79,11 +79,11 @@ func (r *Response) BodyContains(s string) bool {
 }
 
 func (r *Response) HeaderContains(s string) bool {
-	return bytes.Contains(r.Resp.Header.Header(), s2b(s))
+	return bytes.Contains(r.Response.Header.Header(), s2b(s))
 }
 
 func (r *Response) Cookie(k string) (string, bool) {
-	v := r.Resp.Header.PeekCookie(k)
+	v := r.Response.Header.PeekCookie(k)
 	if v == nil {
 		return "", false
 	}
@@ -91,7 +91,7 @@ func (r *Response) Cookie(k string) (string, bool) {
 }
 
 func (r *Response) String() string {
-	return r.Resp.String()
+	return r.Response.String()
 }
 
 func (r *Response) Search(reg *regexp.Regexp) map[string]string {
