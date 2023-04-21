@@ -40,8 +40,10 @@ var defaultClient = fasthttp.Client{
 func AcquireRequest() *Request {
 	v := requestPool.Get()
 	if v == nil {
+		jar, _ := cookiejar.New(nil)
 		return &Request{
 			Request: fasthttp.AcquireRequest(),
+			jar:     jar,
 		}
 	}
 	return v.(*Request)
@@ -53,7 +55,6 @@ func AcquireRequest() *Request {
 // it to request pool.
 func ReleaseRequest(req *Request) {
 	req.Reset()
-	req.Trace = nil
 	requestPool.Put(req)
 }
 
@@ -67,13 +68,12 @@ type Request struct {
 	*fasthttp.Request
 	Trace        *[]TraceInfo
 	maxRedirects int
-	jar          cookiejar.Jar
+	jar          *cookiejar.Jar
 }
 
 func (r *Request) Reset() {
 	r.Trace = nil
 	r.maxRedirects = 0
-	r.jar = cookiejar.Jar{}
 	fasthttp.ReleaseRequest(r.Request)
 }
 
@@ -200,12 +200,13 @@ func (r *Request) Do(resp *Response) error {
 				Duration: time.Since(start),
 			})
 		}
-		resp.Header.VisitAllCookie(func(key, value []byte) {
-			r.jar.SetCookies(u, append(r.jar.Cookies(u), &http.Cookie{
-				Name:  string(key),
-				Value: string(value),
-			}))
-		})
+		if resp.Header.Peek("Set-Cookie") != nil {
+			req := http.Request{Header: map[string][]string{}}
+			resp.Header.VisitAllCookie(func(key, value []byte) {
+				req.Header.Add("Set-Cookie", string(value))
+			})
+			r.jar.SetCookies(u, req.Cookies())
+		}
 	}()
 	if r.maxRedirects > 1 {
 		return defaultClient.DoRedirects(r.Request, resp.Response, r.maxRedirects)
