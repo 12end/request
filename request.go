@@ -43,7 +43,7 @@ func AcquireRequest() *Request {
 		jar, _ := cookiejar.New(nil)
 		return &Request{
 			Request: fasthttp.AcquireRequest(),
-			jar:     jar,
+			Jar:     jar,
 		}
 	}
 	return v.(*Request)
@@ -68,7 +68,7 @@ type Request struct {
 	*fasthttp.Request
 	Trace        *[]TraceInfo
 	maxRedirects int
-	jar          *cookiejar.Jar
+	Jar          *cookiejar.Jar
 }
 
 func (r *Request) Reset() {
@@ -184,9 +184,9 @@ func (r *Request) Do(resp *Response) error {
 	if err != nil {
 		return err
 	}
-	if r.jar.Cookies(u) != nil {
+	if r.Jar.Cookies(u) != nil {
 		r.Header.DelAllCookies()
-		cookies := r.jar.Cookies(u)
+		cookies := r.Jar.Cookies(u)
 		for _, c := range cookies {
 			r.Header.SetCookie(c.Name, c.Value)
 		}
@@ -205,7 +205,7 @@ func (r *Request) Do(resp *Response) error {
 			resp.Header.VisitAllCookie(func(key, value []byte) {
 				httpResp.Header.Add("Set-Cookie", string(value))
 			})
-			r.jar.SetCookies(u, httpResp.Cookies())
+			r.Jar.SetCookies(u, httpResp.Cookies())
 		}
 	}()
 	if r.maxRedirects > 1 {
