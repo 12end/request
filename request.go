@@ -29,7 +29,11 @@ type File struct {
 }
 
 var defaultClient = fasthttp.Client{
-	TLSConfig: &tls.Config{InsecureSkipVerify: true, MinVersion: tls.VersionSSL30},
+	TLSConfig:           &tls.Config{InsecureSkipVerify: true, MinVersion: tls.VersionSSL30},
+	MaxIdleConnDuration: 5 * time.Second,
+	ReadTimeout:         5 * time.Second,
+	WriteTimeout:        5 * time.Second,
+	MaxResponseBodySize: 1024 * 1024,
 }
 
 // AcquireRequest returns an empty Request instance from request pool.
@@ -44,6 +48,7 @@ func AcquireRequest() *Request {
 		return &Request{
 			Request: fasthttp.AcquireRequest(),
 			Jar:     jar,
+			client:  &defaultClient,
 		}
 	}
 	return v.(*Request)
@@ -69,6 +74,7 @@ type Request struct {
 	Trace        *[]TraceInfo
 	maxRedirects int
 	Jar          *cookiejar.Jar
+	client       *fasthttp.Client
 }
 
 func (r *Request) Reset() {
@@ -141,6 +147,13 @@ func (r *Request) Host(host string) *Request {
 	return r
 }
 
+func (r *Request) Client(c *fasthttp.Client) *Request {
+	if c != nil {
+		r.client = c
+	}
+	return r
+}
+
 func (r *Request) MultipartFiles(fs Files) *Request {
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -209,8 +222,8 @@ func (r *Request) Do(resp *Response) error {
 		}
 	}()
 	if r.maxRedirects > 1 {
-		return defaultClient.DoRedirects(r.Request, resp.Response, r.maxRedirects)
+		return r.client.DoRedirects(r.Request, resp.Response, r.maxRedirects)
 	} else {
-		return defaultClient.Do(r.Request, resp.Response)
+		return r.client.Do(r.Request, resp.Response)
 	}
 }
