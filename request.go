@@ -54,6 +54,15 @@ func AcquireRequest() *Request {
 	return v.(*Request)
 }
 
+func AcquireRequestResponse() (*Request, *Response) {
+	return AcquireRequest(), AcquireResponse()
+}
+
+func ReleaseRequestResponse(req *Request, resp *Response) {
+	ReleaseRequest(req)
+	ReleaseResponse(resp)
+}
+
 // ReleaseRequest returns req acquired via AcquireRequest to request pool.
 //
 // It is forbidden accessing req and/or its' members after returning
