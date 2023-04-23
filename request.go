@@ -36,6 +36,9 @@ var defaultClient = fasthttp.Client{
 	ReadTimeout:         5 * time.Second,
 	WriteTimeout:        5 * time.Second,
 	MaxResponseBodySize: 1024 * 1024,
+	RetryIf: func(request *fasthttp.Request) bool {
+		return false
+	},
 }
 
 // AcquireRequest returns an empty Request instance from request pool.
