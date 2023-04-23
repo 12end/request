@@ -157,7 +157,13 @@ func (r *Request) DisableNormalizing() *Request {
 
 func (r *Request) BodyRaw(s string) *Request {
 	r.Request.SetBodyRaw([]byte(s))
-	r.ContentType(ContentTypeForm)
+	if strings.HasPrefix(s, "{") {
+		r.ContentType(ContentTypeJson)
+	} else if strings.Contains(s, "=") || strings.Contains(s, "%") {
+		r.ContentType(ContentTypeForm)
+	} else {
+		r.ContentType(ContentTypeOctetStream)
+	}
 	return r
 }
 
