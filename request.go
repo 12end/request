@@ -151,8 +151,10 @@ func (r *Request) FromRaw(s string) error {
 }
 
 func (r *Request) Host(host string) *Request {
-	r.Request.UseHostHeader = true
-	r.Request.Header.SetHostBytes([]byte(host))
+	if host != "" {
+		r.Request.UseHostHeader = true
+		r.Request.Header.SetHostBytes([]byte(host))
+	}
 	return r
 }
 
