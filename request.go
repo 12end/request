@@ -157,6 +157,7 @@ func (r *Request) DisableNormalizing() *Request {
 
 func (r *Request) BodyRaw(s string) *Request {
 	r.Request.SetBodyRaw([]byte(s))
+	r.ContentType(ContentTypeForm)
 	return r
 }
 
