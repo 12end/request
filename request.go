@@ -123,6 +123,7 @@ func (r *Request) ContentType(c string) *Request {
 }
 
 func (r *Request) SetParams(p Params) *Request {
+	r.Request.URI().QueryArgs().Reset()
 	for k, v := range p {
 		r.Request.URI().QueryArgs().Set(k, v)
 	}
@@ -135,6 +136,7 @@ func (r *Request) SetTimeout(t time.Duration) *Request {
 }
 
 func (r *Request) SetData(p Data) *Request {
+	r.ContentType("application/x-www-form-urlencoded")
 	r.PostArgs().Reset()
 	for k, v := range p {
 		r.Request.PostArgs().Set(k, v)
