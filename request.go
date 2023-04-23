@@ -258,17 +258,26 @@ func escapeQuotes(s string) string {
 func (r *Request) Do(resp *Response) error {
 	resp.body = ""
 	resp.title = ""
-	u, err := url.Parse(r.Request.URI().String())
-	if err != nil {
-		return err
-	}
-	if r.Jar.Cookies(u) != nil {
-		r.Header.DelAllCookies()
-		cookies := r.Jar.Cookies(u)
-		for _, c := range cookies {
-			r.Header.SetCookie(c.Name, c.Value)
+	u, err := url.Parse(string(r.Request.Header.RequestURI()))
+	if err == nil {
+		if r.Jar.Cookies(u) != nil {
+			r.Header.DelAllCookies()
+			cookies := r.Jar.Cookies(u)
+			for _, c := range cookies {
+				r.Header.SetCookie(c.Name, c.Value)
+			}
 		}
+		defer func() {
+			if resp.Header.Peek("Set-Cookie") != nil {
+				httpResp := http.Response{Header: map[string][]string{}}
+				resp.Header.VisitAllCookie(func(key, value []byte) {
+					httpResp.Header.Add("Set-Cookie", string(value))
+				})
+				r.Jar.SetCookies(u, httpResp.Cookies())
+			}
+		}()
 	}
+
 	start := time.Now()
 	defer func() {
 		if r.Trace != nil {
@@ -277,13 +286,6 @@ func (r *Request) Do(resp *Response) error {
 				Response: resp.String(),
 				Duration: time.Since(start),
 			})
-		}
-		if resp.Header.Peek("Set-Cookie") != nil {
-			httpResp := http.Response{Header: map[string][]string{}}
-			resp.Header.VisitAllCookie(func(key, value []byte) {
-				httpResp.Header.Add("Set-Cookie", string(value))
-			})
-			r.Jar.SetCookies(u, httpResp.Cookies())
 		}
 	}()
 	if r.maxRedirects > 1 {
