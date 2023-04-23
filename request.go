@@ -157,7 +157,7 @@ func (r *Request) DisableNormalizing() *Request {
 
 func (r *Request) BodyRaw(s string) *Request {
 	r.Request.SetBodyRaw([]byte(s))
-	if strings.HasPrefix(s, "{") {
+	if strings.HasPrefix(s, "{") || strings.HasPrefix(s, "[") {
 		r.ContentType(ContentTypeJson)
 	} else if strings.Contains(s, "=") || strings.Contains(s, "%") {
 		r.ContentType(ContentTypeForm)
@@ -220,14 +220,19 @@ func (r *Request) MultipartFiles(fs Files) *Request {
 
 	for n, f := range fs {
 		h := make(textproto.MIMEHeader)
-		if f.FileName != "" {
-			h.Set("filename", f.FileName)
-		}
 		if f.ContentType != "" {
 			h.Set("Content-Type", f.ContentType)
 		}
+		if f.FileName != "" {
+			h.Set("Content-Disposition",
+				fmt.Sprintf(`form-data; name="%s"; filename="%s"`,
+					escapeQuotes(n), escapeQuotes(f.FileName)))
+			h.Set("Content-Type", "application/octet-stream")
+		} else {
+			h.Set("Content-Disposition",
+				fmt.Sprintf(`form-data; name="%s"`, escapeQuotes(n)))
+		}
 		part, err := w.CreatePart(h)
-		//part, err := w.CreateFormFile(fieldName, f.FileName)
 		if err != nil {
 			fmt.Printf("Upload %s failed!", n)
 			panic(err)
@@ -238,8 +243,8 @@ func (r *Request) MultipartFiles(fs Files) *Request {
 		}
 	}
 
-	r.Request.Header.SetMultipartFormBoundary(w.Boundary())
 	r.Request.SetBodyRaw(b.Bytes())
+	r.Request.Header.SetMultipartFormBoundary(w.Boundary())
 	return r
 }
 
