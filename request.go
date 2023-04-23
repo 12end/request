@@ -107,8 +107,8 @@ func (r *Request) Method(method string) *Request {
 	return r
 }
 
-func (r *Request) URL(url string) *Request {
-	r.Request.SetRequestURIBytes([]byte(url))
+func (r *Request) URI(u string) *Request {
+	r.Request.SetRequestURI(u)
 	return r
 }
 
