@@ -294,3 +294,35 @@ func (r *Request) Do(resp *Response) error {
 		return r.client.Do(r.Request, resp.Response)
 	}
 }
+
+func (r *Request) Get() *Request {
+	return r.Method(MethodGet)
+}
+
+func (r *Request) Post() *Request {
+	return r.Method(MethodPost)
+}
+
+func (r *Request) Move() *Request {
+	return r.Method(MethodMove)
+}
+
+func (r *Request) Put() *Request {
+	return r.Method(MethodPut)
+}
+
+func (r *Request) Delete() *Request {
+	return r.Method(MethodDelete)
+}
+
+func (r *Request) Head() *Request {
+	return r.Method(MethodHead)
+}
+
+func (r *Request) Options() *Request {
+	return r.Method(MethodOptions)
+}
+
+func (r *Request) Patch() *Request {
+	return r.Method(MethodPatch)
+}
