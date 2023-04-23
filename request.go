@@ -135,6 +135,7 @@ func (r *Request) SetTimeout(t time.Duration) *Request {
 }
 
 func (r *Request) SetData(p Data) *Request {
+	r.PostArgs().Reset()
 	for k, v := range p {
 		r.Request.PostArgs().Set(k, v)
 	}
