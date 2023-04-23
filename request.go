@@ -112,11 +112,6 @@ func (r *Request) URL(url string) *Request {
 	return r
 }
 
-func (r *Request) WithTrace(t *[]TraceInfo) *Request {
-	r.Trace = t
-	return r
-}
-
 func (r *Request) SetParams(p Params) *Request {
 	for k, v := range p {
 		r.Request.URI().QueryArgs().Set(k, v)
@@ -170,6 +165,11 @@ func (r *Request) BasicAuth(u, p string) *Request {
 }
 
 func (r *Request) ClearTrace() *Request {
+	r.Trace = &[]TraceInfo{}
+	return r
+}
+
+func (r *Request) WithTrace() *Request {
 	r.Trace = &[]TraceInfo{}
 	return r
 }
