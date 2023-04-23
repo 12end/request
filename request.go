@@ -3,6 +3,7 @@ package request
 import (
 	"bufio"
 	"bytes"
+	"encoding/base64"
 	"fmt"
 	"github.com/12end/tls"
 	"github.com/valyala/fasthttp"
@@ -155,6 +156,16 @@ func (r *Request) Host(host string) *Request {
 		r.Request.UseHostHeader = true
 		r.Request.Header.SetHostBytes([]byte(host))
 	}
+	return r
+}
+
+func basicAuth(username, password string) string {
+	auth := username + ":" + password
+	return base64.StdEncoding.EncodeToString([]byte(auth))
+}
+
+func (r *Request) BasicAuth(u, p string) *Request {
+	r.Header.Set("Authorization", "Basic "+basicAuth(u, p))
 	return r
 }
 
