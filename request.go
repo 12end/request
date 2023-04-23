@@ -112,6 +112,16 @@ func (r *Request) URI(u string) *Request {
 	return r
 }
 
+func (r *Request) UserAgent(ua string) *Request {
+	r.Request.Header.SetUserAgent(ua)
+	return r
+}
+
+func (r *Request) ContentType(c string) *Request {
+	r.Request.Header.SetContentType(c)
+	return r
+}
+
 func (r *Request) SetParams(p Params) *Request {
 	for k, v := range p {
 		r.Request.URI().QueryArgs().Set(k, v)
@@ -166,6 +176,13 @@ func (r *Request) BasicAuth(u, p string) *Request {
 
 func (r *Request) ClearTrace() *Request {
 	r.Trace = &[]TraceInfo{}
+	return r
+}
+
+func (r *Request) SetHeader(h map[string]string) *Request {
+	for k, v := range h {
+		r.Header.Add(k, v)
+	}
 	return r
 }
 
