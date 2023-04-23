@@ -295,34 +295,34 @@ func (r *Request) Do(resp *Response) error {
 	}
 }
 
-func (r *Request) Get() *Request {
-	return r.Method(MethodGet)
+func (r *Request) Get(u string) *Request {
+	return r.Method(MethodGet).URI(u)
 }
 
-func (r *Request) Post() *Request {
-	return r.Method(MethodPost)
+func (r *Request) Post(u string) *Request {
+	return r.Method(MethodPost).URI(u)
 }
 
-func (r *Request) Move() *Request {
-	return r.Method(MethodMove)
+func (r *Request) Move(u string) *Request {
+	return r.Method(MethodMove).URI(u)
 }
 
-func (r *Request) Put() *Request {
-	return r.Method(MethodPut)
+func (r *Request) Put(u string) *Request {
+	return r.Method(MethodPut).URI(u)
 }
 
-func (r *Request) Delete() *Request {
-	return r.Method(MethodDelete)
+func (r *Request) Delete(u string) *Request {
+	return r.Method(MethodDelete).URI(u)
 }
 
-func (r *Request) Head() *Request {
-	return r.Method(MethodHead)
+func (r *Request) Head(u string) *Request {
+	return r.Method(MethodHead).URI(u)
 }
 
-func (r *Request) Options() *Request {
-	return r.Method(MethodOptions)
+func (r *Request) Options(u string) *Request {
+	return r.Method(MethodOptions).URI(u)
 }
 
-func (r *Request) Patch() *Request {
-	return r.Method(MethodPatch)
+func (r *Request) Patch(u string) *Request {
+	return r.Method(MethodPatch).URI(u)
 }
