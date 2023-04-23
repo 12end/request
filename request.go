@@ -22,7 +22,8 @@ var requestPool sync.Pool
 
 type Params map[string]string
 type Data map[string]string // for post form
-type Files map[string]File  // name ,file-content
+type Header map[string]string
+type Files map[string]File // name ,file-content
 type File struct {
 	FileName    string
 	ContentType string
@@ -182,7 +183,7 @@ func (r *Request) ClearTrace() *Request {
 	return r
 }
 
-func (r *Request) SetHeader(h map[string]string) *Request {
+func (r *Request) SetHeader(h Header) *Request {
 	for k, v := range h {
 		r.Header.Add(k, v)
 	}
