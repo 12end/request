@@ -31,11 +31,12 @@ type File struct {
 }
 
 var defaultClient = fasthttp.Client{
-	TLSConfig:           &tls.Config{InsecureSkipVerify: true, MinVersion: tls.VersionSSL30},
-	MaxIdleConnDuration: 5 * time.Second,
-	ReadTimeout:         5 * time.Second,
-	WriteTimeout:        5 * time.Second,
-	MaxResponseBodySize: 1024 * 1024,
+	TLSConfig:                 &tls.Config{InsecureSkipVerify: true, MinVersion: tls.VersionSSL30},
+	MaxIdleConnDuration:       5 * time.Second,
+	ReadTimeout:               5 * time.Second,
+	WriteTimeout:              5 * time.Second,
+	MaxResponseBodySize:       10 * 1024 * 1024,
+	MaxIdemponentCallAttempts: 1,
 	RetryIf: func(request *fasthttp.Request) bool {
 		return false
 	},
