@@ -169,6 +169,11 @@ func (r *Request) BasicAuth(u, p string) *Request {
 	return r
 }
 
+func (r *Request) ClearTrace() *Request {
+	r.Trace = &[]TraceInfo{}
+	return r
+}
+
 func (r *Request) Client(c *fasthttp.Client) *Request {
 	if c != nil {
 		r.client = c
