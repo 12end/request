@@ -297,8 +297,24 @@ func (r *Request) Do(resp *Response) error {
 	}
 }
 
+func (r *Request) ResetBody() *Request {
+	r.Request.ResetBody()
+	return r
+}
+
+func (r *Request) ResetParam() *Request {
+	r.Request.URI().Reset()
+	return r
+}
+
+func (r *Request) ResetHeader() *Request {
+	r.Request.Header.Reset()
+	return r
+}
+
 func (r *Request) prepare(u string, args ...interface{}) *Request {
 	r.ResetBody()
+	r.URI(u)
 	for _, arg := range args {
 		switch arg.(type) {
 		case string:
