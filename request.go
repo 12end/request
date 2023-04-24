@@ -162,6 +162,8 @@ func (r *Request) BodyRaw(s string) *Request {
 		r.ContentType(ContentTypeJson)
 	} else if strings.Contains(s, "=") || strings.Contains(s, "%") {
 		r.ContentType(ContentTypeForm)
+	} else if strings.HasPrefix(s, "<") {
+		r.ContentType(ContentTypeXml)
 	} else {
 		r.ContentType(ContentTypeOctetStream)
 	}
@@ -295,34 +297,54 @@ func (r *Request) Do(resp *Response) error {
 	}
 }
 
-func (r *Request) Get(u string) *Request {
-	return r.Method(MethodGet).URI(u)
+func (r *Request) prepare(u string, args ...interface{}) *Request {
+	for _, arg := range args {
+		switch arg.(type) {
+		case string:
+			r.BodyRaw(arg.(string))
+		case []byte:
+			r.BodyRaw(string(arg.([]byte)))
+		case Files:
+			r.MultipartFiles(arg.(Files))
+		case Header:
+			r.SetHeader(arg.(Header))
+		case Params:
+			r.SetParams(arg.(Params))
+		case Data:
+			r.SetData(arg.(Data))
+		}
+	}
+	return r
 }
 
-func (r *Request) Post(u string) *Request {
-	return r.Method(MethodPost).URI(u)
+func (r *Request) Get(u string, args ...interface{}) *Request {
+	return r.Method(MethodGet).prepare(u, args...)
 }
 
-func (r *Request) Move(u string) *Request {
-	return r.Method(MethodMove).URI(u)
+func (r *Request) Post(u string, args ...interface{}) *Request {
+	return r.Method(MethodPost).prepare(u, args...)
 }
 
-func (r *Request) Put(u string) *Request {
-	return r.Method(MethodPut).URI(u)
+func (r *Request) Move(u string, args ...interface{}) *Request {
+	return r.Method(MethodMove).prepare(u, args...)
 }
 
-func (r *Request) Delete(u string) *Request {
-	return r.Method(MethodDelete).URI(u)
+func (r *Request) Put(u string, args ...interface{}) *Request {
+	return r.Method(MethodPut).prepare(u, args...)
 }
 
-func (r *Request) Head(u string) *Request {
-	return r.Method(MethodHead).URI(u)
+func (r *Request) Delete(u string, args ...interface{}) *Request {
+	return r.Method(MethodDelete).prepare(u, args...)
 }
 
-func (r *Request) Options(u string) *Request {
-	return r.Method(MethodOptions).URI(u)
+func (r *Request) Head(u string, args ...interface{}) *Request {
+	return r.Method(MethodHead).prepare(u, args...)
 }
 
-func (r *Request) Patch(u string) *Request {
-	return r.Method(MethodPatch).URI(u)
+func (r *Request) Options(u string, args ...interface{}) *Request {
+	return r.Method(MethodOptions).prepare(u, args...)
+}
+
+func (r *Request) Patch(u string, args ...interface{}) *Request {
+	return r.Method(MethodPatch).prepare(u, args...)
 }
