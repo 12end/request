@@ -298,6 +298,7 @@ func (r *Request) Do(resp *Response) error {
 }
 
 func (r *Request) prepare(u string, args ...interface{}) *Request {
+	r.ResetBody()
 	for _, arg := range args {
 		switch arg.(type) {
 		case string:
