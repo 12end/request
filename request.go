@@ -198,9 +198,8 @@ func (r *Request) ClearTrace() *Request {
 }
 
 func (r *Request) SetHeader(h Header) *Request {
-	r.Header.Reset()
 	for k, v := range h {
-		r.Header.Add(k, v)
+		r.Header.Set(k, v)
 	}
 	return r
 }
