@@ -1,5 +1,5 @@
-github.com/12end/fasthttp v0.0.0-20230421024451-368a43fe923e h1:VF4Q42D5v6biwECaeq0q7rhodPs/tWxJqq+zN6R82A8=
-github.com/12end/fasthttp v0.0.0-20230421024451-368a43fe923e/go.mod h1:Yrcvin5qM7dee6ewwGj7TbUMJu3KlQ8HPkZ3JY9ETNs=
+github.com/12end/fasthttp v0.0.0-20230427071457-646400e30865 h1:IomxOkr08/G26QzQovhx1BmhJOHycQdVsl5WLalKaQE=
+github.com/12end/fasthttp v0.0.0-20230427071457-646400e30865/go.mod h1:Yrcvin5qM7dee6ewwGj7TbUMJu3KlQ8HPkZ3JY9ETNs=
 github.com/12end/tls v0.0.0-20230329031950-bbfc948c6240 h1:mivquZGj6e4m3ZQjYEnp16Hs+O+fC9F1uAyl2IQw+zI=
 github.com/12end/tls v0.0.0-20230329031950-bbfc948c6240/go.mod h1:Atb/DLHlYWKw3JSQUNiXSAHlQbqPt/gtSrav/49Rwug=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=

@@ -15,4 +15,4 @@ require (
 	golang.org/x/sys v0.6.0 // indirect
 )
 
-replace github.com/valyala/fasthttp v1.46.0 => github.com/12end/fasthttp v0.0.0-20230421024451-368a43fe923e
+replace github.com/valyala/fasthttp v1.46.0 => github.com/12end/fasthttp v0.0.0-20230427071457-646400e30865
