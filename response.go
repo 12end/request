@@ -3,10 +3,14 @@ package request
 import (
 	"bytes"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 	"html"
+	"io"
 	"regexp"
 	"strings"
 	"sync"
+	"unicode/utf8"
 )
 
 var responsePool sync.Pool
@@ -55,7 +59,7 @@ func (r *Response) Text() string {
 	}
 	body, err := r.Response.BodyUncompressed()
 	if err != nil {
-		body = r.Response.Body()
+		body = decodeBody(r.Response.Body())
 	}
 	r.body = string(body)
 	return r.body
@@ -107,4 +111,20 @@ func (r *Response) Search(reg *regexp.Regexp) map[string]string {
 		}
 	}
 	return result
+}
+
+func decodeBody(s []byte) []byte {
+	I := bytes.NewReader(s)
+	var O io.Reader
+	if !utf8.Valid(s) {
+		O = transform.NewReader(I, simplifiedchinese.GB18030.NewDecoder())
+		d, e := io.ReadAll(O)
+		if e != nil {
+			return s
+		} else {
+			return d
+		}
+	} else {
+		return s
+	}
 }
