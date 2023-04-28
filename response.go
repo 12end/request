@@ -59,9 +59,9 @@ func (r *Response) Text() string {
 	}
 	body, err := r.Response.BodyUncompressed()
 	if err != nil {
-		body = decodeBody(r.Response.Body())
+		body = r.Response.Body()
 	}
-	r.body = string(body)
+	r.body = string(decodeBody(body))
 	return r.body
 }
 
