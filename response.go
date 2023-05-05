@@ -40,6 +40,7 @@ type Response struct {
 
 func (r *Response) Reset() {
 	fasthttp.ReleaseResponse(r.Response)
+	r.Response = nil
 	r.title = ""
 	r.body = ""
 }
