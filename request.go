@@ -57,7 +57,9 @@ func AcquireRequest() *Request {
 			client:  &defaultClient,
 		}
 	}
-	return v.(*Request)
+	r := v.(*Request)
+	r.Request = fasthttp.AcquireRequest()
+	return r
 }
 
 func AcquireRequestResponse() (*Request, *Response) {

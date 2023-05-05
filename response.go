@@ -24,7 +24,9 @@ func AcquireResponse() *Response {
 			Response: fasthttp.AcquireResponse(),
 		}
 	}
-	return v.(*Response)
+	r := v.(*Response)
+	r.Response = fasthttp.AcquireResponse()
+	return r
 }
 
 func ReleaseResponse(resp *Response) {
