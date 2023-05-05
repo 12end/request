@@ -49,8 +49,8 @@ var defaultClient = fasthttp.Client{
 // and usually improves performance.
 func AcquireRequest() *Request {
 	v := requestPool.Get()
+	jar, _ := cookiejar.New(nil)
 	if v == nil {
-		jar, _ := cookiejar.New(nil)
 		return &Request{
 			Request: fasthttp.AcquireRequest(),
 			Jar:     jar,
@@ -59,6 +59,7 @@ func AcquireRequest() *Request {
 	}
 	r := v.(*Request)
 	r.Request = fasthttp.AcquireRequest()
+	r.Jar = jar
 	return r
 }
 
